@@ -19,3 +19,28 @@ class Library(models.Model):
     class Meta:
         verbose_name = 'Библиотека'
         verbose_name_plural = 'Библиотеки'
+
+class Author(models.Model):
+    name = models.CharField(max_length=155)
+    birth_year = models.CharField(max_length=155)
+
+    def __str__(self):
+        return self.name
+        
+    class Meta:
+        verbose_name = ''
+        verbose_name_plural = 'Авторы'
+    
+
+class Book(models.Model):
+    title = models.CharField(max_length=155)
+    desscription = models.TextField()
+    price = models.DecimalField(max_digits=6, decimal_places=2)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='author')
+
+    def __str__(self):
+        return self.title
+        
+    class Meta:
+        verbose_name = ''
+        verbose_name_plural = 'Книги'
