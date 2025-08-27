@@ -37,6 +37,19 @@ class Book(models.Model):
     desscription = models.TextField()
     price = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='author')
+    published_year = models.PositiveIntegerField(blank=True, null=True, verbose_name='Год Публикаций')
+    genre = models.CharField(
+        max_length=155,
+        verbose_name='Жанр',
+        blank=True, null=True
+    )
+    pages = models.CharField(
+        max_length=155,
+        verbose_name='Кол-во Страниц',
+        blank=True, null=True
+    )
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создано')
+    update_at = models.DateTimeField(auto_now_add=True, verbose_name='Обновленр')
 
     def __str__(self):
         return self.title
@@ -44,3 +57,4 @@ class Book(models.Model):
     class Meta:
         verbose_name = ''
         verbose_name_plural = 'Книги'
+        ordering = ['-created_at']
