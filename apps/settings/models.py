@@ -58,3 +58,36 @@ class Book(models.Model):
         verbose_name = ''
         verbose_name_plural = 'Книги'
         ordering = ['-created_at']
+
+class Reader(models.Model):
+    user = models.CharField(
+        max_length=155,verbose_name='ПОльзователь'
+    )
+
+
+
+class Borrowing(models.Model):
+    reader = models.ForeignKey(Reader, on_delete=models.CASCADE, verbose_name="Reader")
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    borrowed_at = models.DateTimeField(verbose_name='Date Borrowed', auto_now_add=True)
+    return_date = models.DateTimeField(verbose_name='Дата возврата')
+    returned = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            if self.book.available_copies <= 0:
+                raise ValueError("Нет доступныйх копий книги!")
+            self.book.available_copies -= 1
+            self.book.save()
+            self.save()
+
+    def mark_as_returned(self):
+        if not self.returned:
+            self.returned = True
+            self.book.available_copies += 1
+            self.book.save()
+            self.save()
+
+    def __str__(self):
+        return self.reader
+    
